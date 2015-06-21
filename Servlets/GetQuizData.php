@@ -12,7 +12,7 @@
 
 	if($Database->checkIfNotEmpty($query)){
 
-		$what = "MIN(QuestionID) as MinNumber, COUNT(QUestionID) as Quantity";
+		$what = "MIN(QuestionID) as MinNumber, COUNT(QuestionID) as Quantity";
 		$from = "question";
 		$where = "QuizID = {$QuizID}";
 		$result = mysqli_fetch_assoc($Database->select($what,$from,$where));
@@ -20,3 +20,4 @@
 	}else{
 		echo json_encode(array('success' => false));
 	}
+?>
