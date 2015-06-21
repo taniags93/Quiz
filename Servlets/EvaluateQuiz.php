@@ -18,7 +18,7 @@ $session = new Session;
       $QuizDao->RecordTestAnswers($TestID, $OptionID);
     }
   $Score = $QuizDao->GetTestResult($TestID);
-  echo "You scored ".$Score. " out of ";
+  echo "You scored ".$Score. " % out of 100";
   echo "<br><a href=TrackProgress.php?QuizID=$QuizID>Track progress of this Quiz</a><br>";
   }
 ?>
