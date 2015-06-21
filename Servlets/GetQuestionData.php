@@ -1,7 +1,9 @@
 <?php
 	require_once $_SERVER['DOCUMENT_ROOT'].'/Quiz/Db/ControllerDB.php';
+	require_once $_SERVER['DOCUMENT_ROOT'].'/Quiz/Dao/QuizDAO.class.php';
 	$Database = new ControlledDB();
   	$QuizDao = new QuizDAO;
+
 
 	$QuestionID = $_GET['Index'];
 

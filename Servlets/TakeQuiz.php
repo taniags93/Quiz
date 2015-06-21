@@ -30,63 +30,71 @@
           contentType: 'application/json; charset=utf-8',
           success: function (response) {
               var obj = jQuery.parseJSON(response);
-              minIndex = obj['MinNumber'];
-              quantity = obj['Quantity'];
-              maxIndex = minIndex + quantity - 1;
+              minIndex = parseInt(obj['MinNumber']);
+              quantity = parseInt(obj['Quantity']);
+              maxIndex = parseInt(minIndex) + parseInt(quantity) - 1;
               actualQuestion = minIndex;
-              alert(response);
               printQuestion(actualQuestion);
           },
           error: function () {
               alert("error");
           }
         });
-
-        
       });
 
       function printQuestion(index){
-      $.ajax({
+        $.ajax({
           url : 'GetQuestionData.php',
           type : 'GET',
           data : {
-            Index: index
+            Index: index,
+            QuizID : "<?php echo $QuizID; ?>"
           },
           contentType: 'application/json; charset=utf-8',
           success: function (response) {
-          	var obj = jQuery.parseJSON(response);
-       	 	var div = $("<div></div>");// Elemento que contendra toda la pregunta
-       		div.attr("id","question");
 
-       		var b = $("<b></b>"); // elemento uinvocado 1 vez por pregunta,
-       		b.html(obj['Title']);
-       		div.append(b);
-			div.append("<br></br>");
-       		// aqui invocar un ajax que te regrese el arreglo de las options de esa pregunta en particular
-		
-			
-       		//COMIENZO DE FOR QUE RECORRERA CADA OPTION
-       		var input = $("<input></input>"); // se necesitan crear 4 de estos, segun la respuesta del ajax
-       		var label = $("<label></label>");
+            var obj = jQuery.parseJSON(response);
+            var div = $("<div></div>");// Elemento que contendra toda la pregunta
+            div.attr("id","question");
+            var b = $("<b></b>"); // elemento uinvocado 1 vez por pregunta,
+            b.html(obj['Title']);
+            div.append(b);
+            div.append("<br/>");
+            // aqui invocar un ajax que te regrese el arreglo de las options de esa pregunta en particular
+        
+            $.each(obj['Options'],function(){
+              var input = $("<input></input>");
+              var label = $("<label></label>");
+              input.attr("type","checkbox");
+              input.attr("name","answers[]");
+              input.attr("id",this["OptionID"]);
+              label.html(this["Title"]);
+              label.attr("for",this["OptionID"]);
+              div.append(input);
+              div.append(label);
+              div.append($("<BR>"));
+            });
 
-        	input.attr("type","checkbox");
-       		input.attr("name","answers[]");
-       		input.val("blabla");
-       		label.html("blabla");
-
-       		div.append(input);
-       		div.append(label);
-       		alert(response);
-
-       		//FIN DE FOR
-
-        	$("#question").replaceWith(div);
-      	},
-      	error: function () {
-              alert("error");
+            $("#question").replaceWith(div);
+          },
+          error: function () {
+          alert("error");
           }
         });
-	};
+      }
+
+      function nextQuestion(){
+        actualQuestion++;
+        if(actualQuestion > maxIndex){
+          return false; // no action taken
+        }
+        if(actualQuestion == maxIndex){
+          $("#submitBtn").removeAttr('hidden');
+          $("#nextbutton").attr('hidden','');
+        }
+        printQuestion(actualQuestion);
+        return false;
+      }
 
     </script>
   </head>
@@ -96,15 +104,10 @@
     <H2><?= $Quiz->Title ?></H2>
     <input type=hidden name='<?= $QuizID; ?>' value=$QuizID>
     <input type=hidden name='<?= $TestID; ?>' value=$TestID>
+    <input type="button" id="nextbutton" onclick="nextQuestion()" value = "Next question"/>
     <div id="question">
     </div>
-
-<?php foreach ($Quiz->Questions as $Q ) : ?>
-    <B> <?= $Q->Title ?></B><br>
-<?php   foreach ($Q->Options as $Option) : ?>
-    <input type='checkbox' name='answers[]' value='<?= $Option->OptionID; ?>'><?=$Option->Title?><br>
-<?php endforeach; endforeach; ?>
-    <input type="submit" name="Submit" value="Submit">
+    <input id="submitBtn" type="submit" name="Submit" value="Submit" hidden>
   </form>
 
 </body>
