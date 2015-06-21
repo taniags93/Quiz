@@ -9,14 +9,13 @@ $QuizDao = new QuizDAO;
 $StudentID = $_SESSION['userid'];
 $QuizID = $_GET['QuizID'];
 
-$TranscriptData = $QuizDao->getTranscriptByStudentIDAndQuizID($StudentID, $QuizID);
+$TranscriptData = $QuizDao->GetTranscriptByStudentIDAndQuizID($StudentID, $QuizID);
 
-$Attempts = array_keys($TranscriptData);
+$Titles = array_keys($TranscriptData);
 $Scores = array_values($TranscriptData);
-
 for($i = 0;$i < count($Scores); $i++)
 {
-    $Chart[$i] = array((string)$Attempts[$i], intval($Scores[$i] * 100));
+    $Chart[$i] = array((string)$Titles[$i], intval($Scores[$i]));
 }
 $JSONChart = json_encode($Chart);
 ?>
@@ -42,8 +41,8 @@ $JSONChart = json_encode($Chart);
           is3D: 'true',
           width: 800,
           height: 600,
-          vAxis: {title: "Attempt #" , direction:-1},
-          hAxis: {title: "Score %"}
+          vAxis: {title: "Test Name" , direction:-1},
+          hAxis: {title: "Score %" , viewWindow:{ max:100, min:0 } }
         };
       var chart = new google.visualization.BarChart(document.getElementById('chart_div'));
       chart.draw(data, options);

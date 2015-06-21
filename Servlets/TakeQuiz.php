@@ -5,13 +5,17 @@
 <?php
 require_once $_SERVER['DOCUMENT_ROOT'].'/Quiz/Session/Session.class.php';
 require_once $_SERVER['DOCUMENT_ROOT'].'/Quiz/Dao/QuizDAO.class.php';
+$session = new Session;
 
   $QuizID = $_GET['QuizID'];
   $QuizDao = new QuizDAO;
+  $StudentID = $_SESSION['userid'];
   $Quiz = $QuizDao->ReadOneQuiz($QuizID);
+  $TestID = $QuizDao->StartTakingQuiz($StudentID, $QuizID);
   echo "<H2> $Quiz->Title </H2>";
-  echo "\n<input type=hidden name='MaximumScore' value=$Quiz->MaximumScore>\n";
   echo "\n<input type=hidden name='QuizID' value=$QuizID>\n";
+  echo "\n<input type=hidden name='TestID' value=$TestID>\n";
+
   foreach ($Quiz->Questions as $Q ) {
     echo "\n<B> $Q->Title </B><br>";
     foreach ($Q->Options as $Option) {
