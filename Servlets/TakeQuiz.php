@@ -25,7 +25,7 @@
           url : 'GetQuizData.php',
           type : 'GET',
           data : {
-            QuizID : "<?php echo $QuizID; ?>"
+            QuizID : "<?=$QuizID;?>"
           },
           contentType: 'application/json; charset=utf-8',
           success: function (response) {
@@ -48,7 +48,7 @@
           type : 'GET',
           data : {
             Index: index,
-            QuizID : "<?php echo $QuizID; ?>"
+            QuizID : "<?=$QuizID;?>"
           },
           contentType: 'application/json; charset=utf-8',
           success: function (response) {
@@ -84,6 +84,29 @@
       }
 
       function nextQuestion(){
+      	
+      	var selected = [];
+      	$('#question input:checked').each(function(){
+      		selected.push($(this).attr('id'));
+      	});
+      	
+    	$.ajax({
+    		url: 'storeAnswers.php',
+        	type: 'POST',
+            data: 
+            {
+            	'answers[]': selected,
+            	 'TestID' : "<?=$TestID;?>"
+         	},
+        });
+        	    	
+      	/*$.ajax({
+          url : 'storeAnswers.php',
+          type : 'GET',
+          data : {
+            
+            TestID : "<?php echo $TestID; ?>"
+          },*/
         actualQuestion++;
         if(actualQuestion > maxIndex){
           return false; // no action taken
@@ -102,8 +125,8 @@
   <form method=POST action=EvaluateQuiz.php>
   
     <H2><?= $Quiz->Title ?></H2>
-    <input type=hidden name='<?= $QuizID; ?>' value=$QuizID>
-    <input type=hidden name='<?= $TestID; ?>' value=$TestID>
+    <input type=hidden name='QuizID' value='<?=$QuizID;?>'>
+    <input type=hidden name='TestID' value='<?=$TestID;?>'>
     <input type="button" id="nextbutton" onclick="nextQuestion()" value = "Next question"/>
     <div id="question">
     </div>
