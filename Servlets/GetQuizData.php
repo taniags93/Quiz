@@ -1,23 +1,12 @@
 <?php
-	require_once $_SERVER['DOCUMENT_ROOT'].'/Quiz/Db/ControllerDB.php';
-	$Database = new ControlledDB();
-
+	require_once $_SERVER['DOCUMENT_ROOT'].'/Quiz/Dao/QuizDAO.class.php';
 	$QuizID = $_GET['QuizID'];
+	$QuizDao = new QuizDAO;
+	$result = $QuizDao->getMinimumQuestionID($QuizID);
 
-	$what = "*";
-	$from = "quiz";
-	$where = "QuizID = {$QuizID}";
-
-	$query = "SELECT {$what} FROM {$from} WHERE {$where}";
-
-	if($Database->checkIfNotEmpty($query)){
-
-		$what = "MIN(QuestionID) as MinNumber, COUNT(QuestionID) as Quantity";
-		$from = "question";
-		$where = "QuizID = {$QuizID}";
-		$result = mysqli_fetch_assoc($Database->select($what,$from,$where));
+	if(isset($result['MinNumber']) && isset($result['Quantity']) && $result['Quantity'] > 0) {
 		echo json_encode(array('success' => true, 'MinNumber' => $result['MinNumber'],'Quantity' => $result['Quantity']));
-	}else{
+	} else {
 		echo json_encode(array('success' => false));
 	}
 ?>

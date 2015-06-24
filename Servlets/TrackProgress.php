@@ -1,3 +1,30 @@
+<style>
+body, html {
+    height: 100%;
+    background-repeat: no-repeat;
+    background-image: linear-gradient(rgb(104, 145, 162), rgb(12, 97, 33));
+    font-family: "Helvetica Neue", Helvetica;
+}
+
+form {
+	background: rgb(240,248,255);
+	border-radius: 20px ;
+}
+
+H2,td {
+	text-align: center;
+}
+#score{
+	font-family: "Helvetica Neue", Helvetica;
+	font-size:34px;
+}
+#chart_div {
+  padding: 10px 15px;
+  -moz-border-radius: 50px;
+  -webkit-border-radius: 50px;
+  border-radius: 20px;
+}
+</style>
 <?php
 
 require_once $_SERVER['DOCUMENT_ROOT'].'/Quiz/Dao/QuizDAO.class.php';
@@ -21,7 +48,10 @@ $JSONChart = json_encode($Chart);
 ?>
 <!DOCTYPE HTML>
 <html>
+
   <head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+
     <!--Load the AJAX API-->
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
@@ -39,8 +69,8 @@ $JSONChart = json_encode($Chart);
       var options = {
           title: 'My Course Progress',
           is3D: 'true',
-          width: 800,
-          height: 600,
+          width: 900,
+          height: 500,
           vAxis: {title: "Test Name" , direction:-1},
           hAxis: {title: "Score %" , viewWindow:{ max:100, min:0 } }
         };
@@ -51,6 +81,12 @@ $JSONChart = json_encode($Chart);
   </head>
 
   <body>
-    <div id="chart_div"></div>
+  		<div class="modal-dialog">
+			<div align="right"><a class="btn btn-info" style="width: 100px"
+				href=Welcome.php>Home</a></div>
+			<div align="center"><img src="images/title-sm.png"></div>
+		</div>
+		<div align="center"><div id="chart_div"></div></div>
+
   </body>
 </html>

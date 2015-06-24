@@ -159,6 +159,7 @@ DEFAULT CHARACTER SET = utf8;
 
 INSERT INTO Student(Username, Passcode) values ('admin', 'admin');
 INSERT INTO Subject(Title) values ('Medicine');
+INSERT INTO Subject(Title) values ('Disney');
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;

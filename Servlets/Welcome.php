@@ -31,11 +31,10 @@ H2,td {
 	<body>
 
 		<div class="modal-dialog">
-			</br>
-			<div align="right"><a class="btn btn-primary" style="width: 100px"
+			<div align="right"><a class="btn btn-info" style="width: 100px"
 				href=Logout.php>Logout</a></div>
-			<div align="center"><img src="title-sm.png"></div>
-       	 	<form class="welcome" style="max-width: 1200px; margin-left : auto; margin-right : auto; margin-top: 10px; height: 500px;" method="post" >
+			<div align="center"><img src="images/title-sm.png"></div>
+       	 	<form class="welcome" style="max-width: 1200px; margin-left : auto; margin-right : auto; margin-top: 10px; height: 400px;" method="post" >
            	 	</br>
            	 	<table class="table table-hover">
            	 		<tr>

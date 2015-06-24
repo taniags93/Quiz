@@ -10,12 +10,14 @@ class userDAO {
 
   public function Login($username , $password) {
     $success = FALSE;
+    $count = 0;
     $username=mysqli_real_escape_string($this->db, $username);
     $mypassword=mysqli_real_escape_string($this->db, $password);
 
     $sql = "SELECT StudentID FROM Student WHERE username='$username' and passcode='$password'";
     $records = mysqli_query($this->db, $sql);
-    $count = mysqli_num_rows($records);
+    if ($records != null)
+      $count = mysqli_num_rows($records);
     if ($count == 1)
       $success = $records->fetch_object()->StudentID;
     return $success;

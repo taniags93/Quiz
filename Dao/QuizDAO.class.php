@@ -17,6 +17,17 @@ class QuizDAO {
       $this->db->query($Query);
     }
   }
+
+  public function getMinimumQuestionID($QuizID) {
+    $MinMax = array();
+    $sql = "SELECT MIN(QuestionID) as MinNumber, COUNT(QuestionID) as Quantity from Question where QuizID='$QuizID'";
+    $records = mysqli_query($this->db, $sql);
+    $row = mysqli_fetch_assoc($records);
+    $MinMax['MinNumber'] = $row['MinNumber'];
+    $MinMax['Quantity'] = $row['Quantity'];
+    return $MinMax;
+  }
+
   public function GetAllSubjects() {
     $Subject = array();
     $sql = "SELECT SubjectID, Title FROM Subject;";
@@ -28,7 +39,6 @@ class QuizDAO {
     }
     return $Subject;
   }
-
   public function ReadOneQuiz($QuizID) {
     $Quiz = new Quiz;
     $Question = new Question;
@@ -37,9 +47,17 @@ class QuizDAO {
     while ( $row = mysqli_fetch_assoc($records) ) {
       $Quiz->Duration = $row['Duration'];
       $Quiz->Title = $row['Title'];
-      $Quiz->Questions = $this->ReadAllQuestion($QuizID);
+      //$Quiz->Questions = $this->ReadAllQuestion($QuizID);
     }
     return $Quiz;
+  }
+
+  public function ReadOneQuestion($QuestionID) {
+    $sql = "SELECT Title FROM Question where QuestionID=$QuestionID;";
+    $records = mysqli_query($this->db, $sql);
+    $row = mysqli_fetch_assoc($records);
+    $Title = $row['Title'];
+    return $Title;
   }
 
   public function ReadAllQuiz() {
@@ -60,24 +78,41 @@ class QuizDAO {
       $Question = new Question;
       $QuestionID = $row['QuestionID'];
       $Question->setQuestion($row['Title']);
-      $Question->Options = $this->ReadAllOption($QuestionID);
+      $Question->Options = $this->ReadAllOption($QuestionID, $TestID);
       array_push($Results, $Question);
     }
     return $Results;
   }
 
-  public function ReadAllOption($QuestionID) {
+  public function ReadAllOption($QuestionID, $TestID) {
     $Results = array();
     $sql = "SELECT Score, Title, OptionID FROM Options Where QuestionID=$QuestionID;";
     $records = mysqli_query($this->db, $sql);
     while ( $row = mysqli_fetch_assoc($records) ) {
       $Option = new Option;
       $Option->setTitle($row['Title']);
-      $Option->setScore($row['Score']);
       $Option->setID($row['OptionID']);
+      $Option->setSelected($this->WasOptionSelected($TestID, $row['OptionID']));
       array_push($Results, $Option);
     }
     return $Results;
+  }
+
+  public function WasOptionSelected($TestID, $OptionID) {
+    $Result = false;
+    $sql = "SELECT OptionID FROM Answer Where OptionID=$OptionID and TestID=$TestID;";
+    $records = mysqli_query($this->db, $sql);
+    if ( $records != false &&  ($row = mysqli_fetch_assoc($records)) != null ) {
+      $Result = true;
+    }
+    return $Result;
+  }
+
+  public function getQuizDuration($QuizID) {
+    $sql = "SELECT Duration from Quiz where QuizID='$QuizID'";
+    $records = mysqli_query($this->db, $sql);
+    $row = mysqli_fetch_assoc($records);
+    return $row['Duration'];
   }
 
   public function StartTakingQuiz($StudentID, $QuizID) {
@@ -88,6 +123,14 @@ class QuizDAO {
     $row = mysqli_fetch_assoc($records);
     $TestID = $row['TestID'];
     return $TestID;
+  }
+
+  public function RemovePreviousAnswersForThisQuestion($TestID, $QuestionID) {
+    $Options = $this->ReadAllOption($QuestionID, $TestID);
+    foreach($Options as $Option) {
+      $sql = "DELETE FROM Answer where TestID=$TestID and OptionID=$Option->OptionID;";
+      $this->db->query($sql);
+    }
   }
 
   public function RecordTestAnswers($TestID, $OptionID) {
