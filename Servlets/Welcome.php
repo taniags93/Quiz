@@ -6,21 +6,54 @@ $session = new Session;
 if (!$session->isValid())
   header("Location: Login.php");
 ?>
+<style>
+body, html {
+    height: 100%;
+    background-repeat: no-repeat;
+    background-image: linear-gradient(rgb(104, 145, 162), rgb(12, 97, 33));
+    font-family: "Helvetica Neue", Helvetica;
+}
 
-<body>
-<h1> Welcome
-  <?php
-  if(isset($_SESSION) && isset($_SESSION['user']) && isset($_SESSION['userid']))
-    echo "<H2>Hello ".$_SESSION['user']."</H2>";
-  $quizdao = new QuizDAO;
-  $quizzes = $quizdao->ReadAllQuiz();
-  foreach ($quizzes as $QuizID => $QuizTitle) {
-      echo "<a href=TakeQuiz.php?QuizID=$QuizID>$QuizTitle</a><br>";
-  }
+form {
+	background: rgb(240,248,255);
+	border-radius: 20px ;
+}
 
-  ?></h1>
-<a href=Logout.php>Logout</a>
-<a href=RegisterUser.php>Register user</a>
-<a href=AddQuiz.php>AddQuiz</a>
+H2,td {
+	text-align: center;
+}
+</style>
 
-</body>
+<html>
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+</head>
+	<body>
+
+		<div class="modal-dialog">
+			</br>
+			<div align="right"><a class="btn btn-primary" style="width: 100px"
+				href=Logout.php>Logout</a></div>
+			<div align="center"><img src="title-sm.png"></div>
+       	 	<form class="welcome" style="max-width: 1200px; margin-left : auto; margin-right : auto; margin-top: 10px; height: 500px;" method="post" >
+           	 	</br>
+           	 	<table class="table table-hover">
+           	 		<tr>
+    					<th><div align="center">Quiz<div></th>
+  					</tr>
+           	 	<?php
+  					if(isset($_SESSION) && isset($_SESSION['user']) && isset($_SESSION['userid']))
+   			 			echo "<H2> Welcome ".$_SESSION['user']."</H2>";
+  					$quizdao = new QuizDAO;
+  					$quizzes = $quizdao->ReadAllQuiz();
+  					echo "</br></br>";
+  					foreach ($quizzes as $QuizID => $QuizTitle) {
+      					echo "<tr><td><a href=TakeQuiz.php?QuizID=$QuizID>$QuizTitle</a></td></tr>";
+  				}
+  				?>	
+  				</table>		
+        	</form>
+    	</div>
+	</body>
+</html>
+
