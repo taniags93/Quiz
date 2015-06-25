@@ -110,7 +110,7 @@ label {
 
 		$('#demo').pietimer({
 			seconds: "<?=$Duration;?>",
-			color: 'rgb(0, 186, 93)',
+			color: 'rgb(240,248,255)',
 			height: 90,
 			width: 90,
 					is_reversed: true

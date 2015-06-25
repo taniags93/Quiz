@@ -1,15 +1,16 @@
 <?php
-include($_SERVER['DOCUMENT_ROOT'].'/Quiz/Session/Session.class.php');
-$session = new Session;
-if($_SERVER["REQUEST_METHOD"] == "POST") {
-  $username=$_POST['username'];
-  $password=$_POST['password'];
-  if ($session->Login($username, $password))
-    header("location: Welcome.php");
-  else
-    $error="Your Login Name or Password is invalid";
-}
-?>
+				include($_SERVER['DOCUMENT_ROOT'].'/Quiz/Session/Session.class.php');
+				$session = new Session;
+				if($_SERVER["REQUEST_METHOD"] == "POST") {
+ 				$username=$_POST['username'];
+  				$password=$_POST['password'];
+  					if ($session->Login($username, $password))
+    					header("location: Welcome.php");
+  					else{
+    					$_SESSION["message"]="Your Login Name or Password is invalid";
+    				}
+				}
+			?>
 <style>
 body, html {
     height: 100%;
@@ -43,6 +44,9 @@ body, html {
             </div>
             <div align="center"><a id="link" href=RegisterUser.php>Register User</a></div>
 			<div align="center"><a id="link" href=AddQuiz.php>Upload Quiz</a></div>
+			</br>
+			<div style='font-size:20px; color: rgb(238,255,54);' align='center'><?=$_SESSION["message"];?></div>
+
         </form>
     </div>
     

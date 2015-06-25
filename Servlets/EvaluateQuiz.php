@@ -42,7 +42,9 @@ H2,td {
   					$TestID = $_POST['TestID'];
   					$QuizDao = new QuizDAO;
   					$Score = $QuizDao->GetTestResult($TestID);
-  					echo "<div align='center' id='score'>You scored ".$Score. " % out of 100</div>";
+            if ($Score < 0)
+              $Score = 0;
+  					echo "<div align='center' id='score'>You scored ".$Score. " %</div>";
   					echo "</br></br></br></br>";
   					echo "<div align='center' ><a class='btn btn-info' style='width: 200px' href='TrackProgress.php?QuizID=$QuizID'>Track Progress</a></div>";
 			?>

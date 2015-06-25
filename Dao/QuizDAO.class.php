@@ -176,8 +176,16 @@ class QuizDAO {
       }
     }
     if ($success == TRUE) {
-      $this->Add($quiz->toSQL());
+      foreach ($quiz->Questions as $Question) {
+          if(count($Question->Options) < 2 || count($Question->Answers) == 0) {
+            $success = FALSE;
+            break;
+          }
+      }
     }
+    if ($success == TRUE)
+      $this->Add($quiz->toSQL());
+
     return $success;
   }
 

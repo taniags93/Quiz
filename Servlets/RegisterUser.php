@@ -3,14 +3,19 @@ require_once $_SERVER['DOCUMENT_ROOT'].'/Quiz/Session/Session.class.php';
 require_once $_SERVER['DOCUMENT_ROOT'].'/Quiz/Dao/UserDAO.class.php';
 
 $session = new Session;
+$_SESSION["message"] = "";
+
 if($_SERVER["REQUEST_METHOD"] == "POST") {
   $userdao = new UserDAO;
   $username=$_POST['username'];
   $password=$_POST['password'];
   if ($userdao->Add($username, $password))
-    header("location: Welcome.php");
+   {
+        $_SESSION["message"] = "User Added";
+    	header("location: Welcome.php");
+   }
   else
-    $error="User add failed";
+      	$_SESSION["message"] ="Failed to add user.";
 }
 ?>
 <style>
@@ -45,7 +50,9 @@ body, html {
                 <button class="btn btn-primary btn-lg btn-block" type="submit">Add User</button>
             </div>
             <div align="center"><a id="link" href=Login.php>Return to Login</a></div>
-       
+       		</br>
+			<div style='font-size:20px; color: rgb(238,255,54);' align='center'><?=$_SESSION["message"];?></div>
+
        
         </form>
     </div>
